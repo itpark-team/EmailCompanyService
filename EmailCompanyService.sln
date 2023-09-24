@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppServerSide", "ConsoleAppServerSide\ConsoleAppServerSide.csproj", "{92DFA5CF-BB6A-449F-8E9B-F70FD1AD05C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppClientSide", "ConsoleAppClientSide\ConsoleAppClientSide.csproj", "{9597EE4D-D15C-414E-B122-D55280E5F4D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibraryCommunicationEntities", "ClassLibraryCommunicationEntities\ClassLibraryCommunicationEntities.csproj", "{1BFB191F-888B-4C27-9F39-78CAA6A63B9B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{92DFA5CF-BB6A-449F-8E9B-F70FD1AD05C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92DFA5CF-BB6A-449F-8E9B-F70FD1AD05C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92DFA5CF-BB6A-449F-8E9B-F70FD1AD05C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92DFA5CF-BB6A-449F-8E9B-F70FD1AD05C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9597EE4D-D15C-414E-B122-D55280E5F4D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9597EE4D-D15C-414E-B122-D55280E5F4D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9597EE4D-D15C-414E-B122-D55280E5F4D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9597EE4D-D15C-414E-B122-D55280E5F4D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BFB191F-888B-4C27-9F39-78CAA6A63B9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BFB191F-888B-4C27-9F39-78CAA6A63B9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BFB191F-888B-4C27-9F39-78CAA6A63B9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BFB191F-888B-4C27-9F39-78CAA6A63B9B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

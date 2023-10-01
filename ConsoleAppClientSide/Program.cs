@@ -45,14 +45,16 @@ while (isRun)
                 Email = email
             };
 
-            ClientRequest clientRequest = new ClientRequest()
-            {
-                Command = Commands.RegisterNewUser,
-                JsonData = JsonSerializer.Serialize(requestRegisterUserDto)
-            };
+            ClientRequest clientRequest = new ClientRequest(Commands.RegisterNewUser,
+                JsonSerializer.Serialize(requestRegisterUserDto));
 
             string messageToServer = JsonSerializer.Serialize(clientRequest);
+            
             clientEngine.SendMessage(messageToServer);
+
+            string messageFromServer = clientEngine.ReceiveMessage();
+
+            int a = 5;
         }
 
             break;

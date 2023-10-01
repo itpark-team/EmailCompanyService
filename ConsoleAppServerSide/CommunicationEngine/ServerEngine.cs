@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using NLog;
 
 namespace ConsoleAppServerSide.CommunicationEngine;
 
@@ -8,7 +9,8 @@ public class ServerEngine
 {
     private Socket _serverSocket;
     private IPEndPoint _ipEndPoint;
-    private Socket _clientSocket;
+
+    private static ILogger Logger = LogManager.GetCurrentClassLogger();
 
     public ServerEngine(string ip, int port)
     {
@@ -16,62 +18,26 @@ public class ServerEngine
         _ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
     }
 
-    private void Log(string msg)
-    {
-        Console.WriteLine($"LOG: {DateTime.Now} --- {msg}");
-    }
-
     public void StartServer()
     {
         _serverSocket.Bind(_ipEndPoint);
-        _serverSocket.Listen(1);
-        Log("SERVER STARTED");
+        _serverSocket.Listen(10);
+        Logger.Debug("SERVER STARTED");
     }
 
-    public void AcceptClient()
+    public Socket AcceptClient()
     {
-        _clientSocket = _serverSocket.Accept();
+        Socket clientSocket = _serverSocket.Accept();
 
-        Log($"CLIENT ACCEPT FROM {_clientSocket.RemoteEndPoint}");
-    }
+        Logger.Debug($"CLIENT ACCEPT FROM {clientSocket.RemoteEndPoint}");
 
-    public void SendMessage(string messageToClient)
-    {
-        byte[] outputBytes = Encoding.Unicode.GetBytes(messageToClient);
-        _clientSocket.Send(outputBytes);
-
-        Log($"MESSAGE TO CLIENT SENT: {messageToClient}");
-    }
-
-    public string ReceiveMessage()
-    {
-        StringBuilder messageBuilder = new StringBuilder();
-        do
-        {
-            byte[] inputBytes = new byte[1024];
-            int countBytes = _clientSocket.Receive(inputBytes);
-            messageBuilder.Append(Encoding.Unicode.GetString(inputBytes, 0, countBytes));
-        } while (_clientSocket.Available > 0);
-
-        string messageFromClient = messageBuilder.ToString();
-
-        Log($"MESSAGE FROM CLIENT RECIEVED: {messageFromClient}");
-
-        return messageFromClient;
-    }
-
-    public void CloseClientSocket()
-    {
-        _clientSocket.Shutdown(SocketShutdown.Both);
-        _clientSocket.Close();
-
-        Log($"CLIENT FINISHED");
+        return clientSocket;
     }
 
     public void CloseServerSocket()
     {
         _serverSocket.Close();
 
-        Log($"SERVER FINISHED");
+        Logger.Debug($"SERVER FINISHED");
     }
 }

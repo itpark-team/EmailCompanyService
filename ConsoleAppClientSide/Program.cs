@@ -12,22 +12,25 @@ UiUtil.PrintlnString("Вы успешно подключились! Нажмит
 UiUtil.WaitPressAnyKey();
 
 ServicesManager servicesManager = new ServicesManager();
-ResponseAuthUserDto user = null;
 
 while (true)
 {
     UiUtil.ClearConsole();
-    if (user != null)
+
+    if (DataStorage.ContainsKey("user"))
     {
+        ResponseAuthUserDto user = DataStorage.GetWithType<ResponseAuthUserDto>("user");
+        
         UiUtil.PrintlnString($"{user.Name}, добро пожаловать. Ваш email: {user.Email}");
     }
 
     UiUtil.PrintlnString("Меню");
     UiUtil.PrintlnString("1.Регистрация");
     UiUtil.PrintlnString("2.Авторизация");
+    UiUtil.PrintlnString("3.Отправить письмо");
     UiUtil.PrintlnString("0.Выход");
 
-    int action = UiUtil.InputIntWithBounds("Введите действие: ", 0, 2);
+    int action = UiUtil.InputIntWithBounds("Введите действие: ", 0, 3);
 
     if (action == 0)
     {
@@ -50,7 +53,9 @@ while (true)
 
         if (action == 2)
         {
-            user = JsonSerializer.Deserialize<ResponseAuthUserDto>(serverResponse.JsonData);
+            ResponseAuthUserDto user = JsonSerializer.Deserialize<ResponseAuthUserDto>(serverResponse.JsonData);
+
+            DataStorage.AddOrUpdate("user", user);
         }
     }
     else if (serverResponse.Status == Statuses.ServerError)

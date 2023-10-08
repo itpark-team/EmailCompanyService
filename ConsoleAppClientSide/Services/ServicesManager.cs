@@ -15,6 +15,7 @@ public class ServicesManager
         _methods = new Dictionary<int, Func<ClientRequest>>();
         _methods[1] = usersService.processRegisterNewUserCommand;
         _methods[2] = usersService.processAuthExistUserCommand;
+        _methods[3] = mailsService.processSendMailCommand;
     }
 
     public ClientRequest ProcessAction(int action)

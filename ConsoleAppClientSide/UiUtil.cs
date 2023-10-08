@@ -43,6 +43,26 @@ public static class UiUtil
         return Console.ReadLine();
     }
 
+    public static string InputStringWithBound(string msg, int maxLenght)
+    {
+        bool inputResult;
+        string result;
+        do
+        {
+            Console.Write(msg);
+            result = Console.ReadLine();
+
+            inputResult = true;
+            if (result.Length > maxLenght)
+            {
+                inputResult = false;
+            }
+        } while (!inputResult);
+
+
+        return result;
+    }
+
     public static void PrintlnString(string msg)
     {
         Console.WriteLine(msg);

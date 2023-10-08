@@ -8,10 +8,10 @@ public class UsersService
 {
     public ClientRequest processRegisterNewUserCommand()
     {
-        string login = UiUtil.InputString("Введите логин: ");
-        string password = UiUtil.InputString("Введите пароль: ");
-        string name = UiUtil.InputString("Введите имя: ");
-        string email = UiUtil.InputString("Введите email: ");
+        string login = UiUtil.InputStringWithBound("Введите логин: ", 32);
+        string password = UiUtil.InputStringWithBound("Введите пароль: ", 32);
+        string name = UiUtil.InputStringWithBound("Введите имя: ", 32);
+        string email = UiUtil.InputStringWithBound("Введите email: ", 32);
 
         RequestRegisterUserDto requestRegisterUserDto = new RequestRegisterUserDto()
         {
@@ -27,10 +27,9 @@ public class UsersService
 
     public ClientRequest processAuthExistUserCommand()
     {
-        string login = UiUtil.InputString("Введите логин: ");
-        string password = UiUtil.InputString("Введите пароль: ");
-
-
+        string login = UiUtil.InputStringWithBound("Введите логин: ", 32);
+        string password = UiUtil.InputStringWithBound("Введите пароль: ", 32);
+        
         RequestAuthUserDto requestAuthUserDto = new RequestAuthUserDto()
         {
             Login = login,

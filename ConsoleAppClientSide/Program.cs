@@ -1,69 +1,54 @@
 ﻿using System.Text.Json;
 using ClassLibraryCommunicationEntities.RequestResponseEntities;
 using ClassLibraryCommunicationEntities.SocketsEntities;
+using ConsoleAppClientSide;
 using ConsoleAppClientSide.CommunicationEngine;
+using ConsoleAppClientSide.Services;
 
 ClientEngine clientEngine = new ClientEngine("127.0.0.1", 34536);
 clientEngine.ConnectToServer();
 
-Console.WriteLine("Вы успешно подключились! Нажмите <Enter> для продолжения");
-Console.ReadKey();
+UiUtil.PrintlnString("Вы успешно подключились! Нажмите <Enter> для продолжения");
+UiUtil.WaitPressAnyKey();
 
+ServicesManager servicesManager = new ServicesManager();
 
-bool isRun = true;
-while (isRun)
+while (true)
 {
-    Console.Clear();
-    Console.WriteLine("Меню");
-    Console.WriteLine("1.Регистрация");
-    Console.WriteLine("0.Выход");
+    UiUtil.ClearConsole();
+    UiUtil.PrintlnString("Меню");
+    UiUtil.PrintlnString("1.Регистрация");
+    UiUtil.PrintlnString("0.Выход");
 
-    Console.Write("Введите действие: ");
-    int action = int.Parse(Console.ReadLine());
+    int action = UiUtil.InputIntWithBounds("Введите действие: ", 0, 1);
 
-    switch (action)
+    if (action == 0)
     {
-        case 1:
-        {
-            Console.Write("Введите логин: ");
-            string login = Console.ReadLine();
-
-            Console.Write("Введите пароль: ");
-            string password = Console.ReadLine();
-
-            Console.Write("Введите имя: ");
-            string name = Console.ReadLine();
-
-            Console.Write("Введите email: ");
-            string email = Console.ReadLine();
-
-            RequestRegisterUserDto requestRegisterUserDto = new RequestRegisterUserDto()
-            {
-                Login = login,
-                Password = password,
-                Name = name,
-                Email = email
-            };
-
-            ClientRequest clientRequest = new ClientRequest(Commands.RegisterNewUser,
-                JsonSerializer.Serialize(requestRegisterUserDto));
-
-            string messageToServer = JsonSerializer.Serialize(clientRequest);
-            
-            clientEngine.SendMessage(messageToServer);
-
-            string messageFromServer = clientEngine.ReceiveMessage();
-
-            int a = 5;
-        }
-
-            break;
-        case 0:
-        {
-            isRun = false;
-        }
-            break;
+        break;
     }
+
+    ClientRequest clientRequest = servicesManager.ProcessAction(action);
+
+    string messageToServer = JsonSerializer.Serialize(clientRequest);
+
+    clientEngine.SendMessage(messageToServer);
+
+    string messageFromServer = clientEngine.ReceiveMessage();
+
+    ServerResponse serverResponse = JsonSerializer.Deserialize<ServerResponse>(messageFromServer);
+
+    if (serverResponse.Status == Statuses.Ok)
+    {
+        UiUtil.PrintlnString("Запрос выполнен успешно");
+    }
+    else if (serverResponse.Status == Statuses.ServerError)
+    {
+        UiUtil.PrintlnString("Запрос завершился с ошибкой на стороне сервера");
+    }
+
+    UiUtil.PrintlnString("Нажмите <Enter> для продолжения");
+    UiUtil.WaitPressAnyKey();
 }
 
 clientEngine.CloseClientSocket();
+UiUtil.PrintlnString("Клиент успешно отсоединён");

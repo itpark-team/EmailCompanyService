@@ -8,10 +8,8 @@ public class ServicesManager
     private Dictionary<string, Func<string, ServerResponse>>
         _methods;
 
-    public ServicesManager()
+    public ServicesManager(EcsDbContext dbContext)
     {
-        EcsDbContext dbContext = new EcsDbContext();
-
         UsersService usersService = new UsersService(dbContext);
         MailsService mailsService = new MailsService(dbContext);
 

@@ -2,6 +2,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using ClassLibraryCommunicationEntities.SocketsEntities;
+using ConsoleAppServerSide.DbConnector;
 using ConsoleAppServerSide.Services;
 using NLog;
 
@@ -11,13 +12,17 @@ public class ClientEngine
 {
     private Socket _clientSocket;
     private ServicesManager _servicesManager;
+    private EcsDbContext _dbContext;
 
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
 
     public ClientEngine(Socket clientSocket)
     {
-        _clientSocket = clientSocket; 
-        _servicesManager = new ServicesManager();
+        _clientSocket = clientSocket;
+
+        _dbContext = new EcsDbContext();
+
+        _servicesManager = new ServicesManager(_dbContext);
     }
 
     public void Communicate()
@@ -28,7 +33,16 @@ public class ClientEngine
 
             ClientRequest clientRequest = JsonSerializer.Deserialize<ClientRequest>(messageFromClient);
 
-            ServerResponse serverResponse = _servicesManager.ProcessClientRequest(clientRequest);
+            ServerResponse serverResponse = null;
+
+            try
+            {
+                serverResponse = _servicesManager.ProcessClientRequest(clientRequest);
+            }
+            catch (Exception e)
+            {
+                serverResponse = new ServerResponse(Statuses.ServerError, e.ToString());
+            }
 
             string messageToClient = JsonSerializer.Serialize(serverResponse);
 
@@ -63,7 +77,6 @@ public class ClientEngine
 
     private void CloseClientSocket()
     {
-        _clientSocket.Shutdown(SocketShutdown.Both);
         _clientSocket.Close();
 
         Logger.Debug($"CLIENT FINISHED");

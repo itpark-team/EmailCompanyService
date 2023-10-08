@@ -14,7 +14,8 @@ public class ServicesManager
         MailsService mailsService = new MailsService(dbContext);
 
         _methods = new Dictionary<string, Func<string, ServerResponse>>();
-        _methods["RegisterNewUser"] = usersService.processRegisterNewUserCommand;
+        _methods[Commands.RegisterNewUser] = usersService.processRegisterNewUserCommand;
+        _methods[Commands.AuthExistUser] = usersService.processAuthExistUserCommand;
     }
 
     public ServerResponse ProcessClientRequest(ClientRequest clientRequest)

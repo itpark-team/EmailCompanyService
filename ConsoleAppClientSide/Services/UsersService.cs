@@ -24,4 +24,20 @@ public class UsersService
         return new ClientRequest(Commands.RegisterNewUser,
             JsonSerializer.Serialize(requestRegisterUserDto));
     }
+
+    public ClientRequest processAuthExistUserCommand()
+    {
+        string login = UiUtil.InputString("Введите логин: ");
+        string password = UiUtil.InputString("Введите пароль: ");
+
+
+        RequestAuthUserDto requestAuthUserDto = new RequestAuthUserDto()
+        {
+            Login = login,
+            Password = password
+        };
+
+        return new ClientRequest(Commands.AuthExistUser,
+            JsonSerializer.Serialize(requestAuthUserDto));
+    }
 }

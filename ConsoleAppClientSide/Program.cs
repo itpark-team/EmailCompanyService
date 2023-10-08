@@ -12,15 +12,22 @@ UiUtil.PrintlnString("Вы успешно подключились! Нажмит
 UiUtil.WaitPressAnyKey();
 
 ServicesManager servicesManager = new ServicesManager();
+ResponseAuthUserDto user = null;
 
 while (true)
 {
     UiUtil.ClearConsole();
+    if (user != null)
+    {
+        UiUtil.PrintlnString($"{user.Name}, добро пожаловать. Ваш email: {user.Email}");
+    }
+
     UiUtil.PrintlnString("Меню");
     UiUtil.PrintlnString("1.Регистрация");
+    UiUtil.PrintlnString("2.Авторизация");
     UiUtil.PrintlnString("0.Выход");
 
-    int action = UiUtil.InputIntWithBounds("Введите действие: ", 0, 1);
+    int action = UiUtil.InputIntWithBounds("Введите действие: ", 0, 2);
 
     if (action == 0)
     {
@@ -40,10 +47,15 @@ while (true)
     if (serverResponse.Status == Statuses.Ok)
     {
         UiUtil.PrintlnString("Запрос выполнен успешно");
+
+        if (action == 2)
+        {
+            user = JsonSerializer.Deserialize<ResponseAuthUserDto>(serverResponse.JsonData);
+        }
     }
     else if (serverResponse.Status == Statuses.ServerError)
     {
-        UiUtil.PrintlnString("Запрос завершился с ошибкой на стороне сервера");
+        UiUtil.PrintlnString("Запрос завершился с ошибкой на стороне сервера: " + serverResponse.JsonData);
     }
 
     UiUtil.PrintlnString("Нажмите <Enter> для продолжения");
@@ -52,3 +64,4 @@ while (true)
 
 clientEngine.CloseClientSocket();
 UiUtil.PrintlnString("Клиент успешно отсоединён");
+UiUtil.PrintlnString("Программа будет завершена");

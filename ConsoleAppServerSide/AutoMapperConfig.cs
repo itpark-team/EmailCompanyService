@@ -24,6 +24,9 @@ public class AutoMapperConfig
         {
             cfg.CreateMap<RequestRegisterUserDto, User>();
             cfg.CreateMap<User, ResponseRegisterUserDto>();
+            
+            cfg.CreateMap<RequestAuthUserDto, User>();
+            cfg.CreateMap<User, ResponseAuthUserDto>();
         });
         _mapper = config.CreateMapper();
     }

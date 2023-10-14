@@ -14,10 +14,13 @@ public class ServicesManager
         MailsService mailsService = new MailsService(dbContext);
 
         _methods = new Dictionary<string, Func<string, ServerResponse>>();
-        _methods[Commands.RegisterNewUser] = usersService.processRegisterNewUserCommand;
+        _methods[Commands.RegisterNewUser] = usersService.ProcessRegisterNewUserCommand;
         _methods[Commands.AuthExistUser] = usersService.processAuthExistUserCommand;
         
         _methods[Commands.SendMail] = mailsService.processSendMailCommand;
+
+        _methods[Commands.GetIsNotOpenedEmails] = mailsService.processGetIsNotOpenedMailsCommand;
+        _methods[Commands.GetAllEmails] = mailsService.processAllMailsCommand;
     }
 
     public ServerResponse ProcessClientRequest(ClientRequest clientRequest)

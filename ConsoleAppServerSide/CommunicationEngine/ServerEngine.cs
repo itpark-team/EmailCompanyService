@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using NLog;
+using NLog.Fluent;
 
 namespace ConsoleAppServerSide.CommunicationEngine;
 
@@ -22,14 +23,14 @@ public class ServerEngine
     {
         _serverSocket.Bind(_ipEndPoint);
         _serverSocket.Listen(10);
-        Logger.Debug("SERVER STARTED");
+        Logger.Info("SERVER STARTED");
     }
 
     public Socket AcceptClient()
     {
         Socket clientSocket = _serverSocket.Accept();
 
-        Logger.Debug($"CLIENT ACCEPT FROM {clientSocket.RemoteEndPoint}");
+        Logger.Info($"CLIENT ACCEPT FROM {clientSocket.RemoteEndPoint}");
 
         return clientSocket;
     }
@@ -38,6 +39,6 @@ public class ServerEngine
     {
         _serverSocket.Close();
 
-        Logger.Debug($"SERVER FINISHED");
+        Logger.Info($"SERVER FINISHED");
     }
 }

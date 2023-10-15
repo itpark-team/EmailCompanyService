@@ -18,9 +18,9 @@ public class UsersService
         _mapper = AutoMapperConfig.GetInstance().GetMapper();
     }
 
-    public ServerResponse processRegisterNewUserCommand(string jsonData)
+    public ServerResponse ProcessRegisterNewUserCommand(string jsonData)
     {
-        RequestRegisterUserDto requestRegisterUserDto =
+        RequestRegisterUserDto? requestRegisterUserDto =
             JsonSerializer.Deserialize<RequestRegisterUserDto>(jsonData);
 
         User user = _mapper.Map<User>(requestRegisterUserDto);

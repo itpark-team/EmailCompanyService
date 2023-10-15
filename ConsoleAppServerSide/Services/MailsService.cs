@@ -1,4 +1,5 @@
 using System.Text.Json;
+using AutoMapper;
 using ClassLibraryCommunicationEntities.RequestResponseEntities;
 using ClassLibraryCommunicationEntities.SocketsEntities;
 using ConsoleAppServerSide.DbConnector;
@@ -9,10 +10,12 @@ namespace ConsoleAppServerSide.Services;
 public class MailsService
 {
     private EcsDbContext _dbContext;
+    private IMapper _mapper;
 
     public MailsService(EcsDbContext dbContext)
     {
         _dbContext = dbContext;
+        _mapper = AutoMapperConfig.GetInstance().GetMapper();
     }
 
     public ServerResponse processSendMailCommand(string jsonData)
@@ -42,5 +45,67 @@ public class MailsService
         _dbContext.SaveChanges();
 
         return new ServerResponse(Statuses.Ok);
+    }
+    
+    public ServerResponse processGetIsNotOpenedMailsCommand(string jsonData)
+    {
+        int idUser = int.Parse(jsonData);
+        
+        List<Mail> emails = _dbContext.Mails.Where(mail => mail.IdTo == idUser && !mail.IsOpened).ToList();
+
+        if (emails == null)
+        {
+            return new ServerResponse(Statuses.ServerError,
+                $"mail with {idUser} id not found");
+        }
+
+        List<ResponseViewEmailDto> responseViewEmails = new List<ResponseViewEmailDto>();
+
+        for (int i = 0; i < emails.Count; i++)
+        {
+            responseViewEmails.Add(_mapper.Map<ResponseViewEmailDto>(emails[i]));
+        }
+
+        List<Mail> mails = _dbContext.Mails.ToList();
+
+        for (int i = 0; i < mails.Count; i++)
+        {
+            mails[i].IsOpened = true;
+        }
+
+        _dbContext.SaveChanges();
+
+        return new ServerResponse(Statuses.Ok, JsonSerializer.Serialize(responseViewEmails));
+    }
+    
+    public ServerResponse processAllMailsCommand(string jsonData)
+    {
+        int idUser = int.Parse(jsonData);
+        
+        List<Mail> emails = _dbContext.Mails.Where(mail => mail.IdTo == idUser).ToList();
+
+        if (emails == null)
+        {
+            return new ServerResponse(Statuses.ServerError,
+                $"mail with {idUser} id not found");
+        }
+
+        List<ResponseViewEmailDto> responseViewEmails = new List<ResponseViewEmailDto>();
+
+        for (int i = 0; i < emails.Count; i++)
+        {
+            responseViewEmails.Add(_mapper.Map<ResponseViewEmailDto>(emails[i]));
+        }
+
+        List<Mail> mails = _dbContext.Mails.ToList();
+
+        for (int i = 0; i < mails.Count; i++)
+        {
+            mails[i].IsOpened = true;
+        }
+
+        _dbContext.SaveChanges();
+
+        return new ServerResponse(Statuses.Ok, JsonSerializer.Serialize(responseViewEmails));
     }
 }

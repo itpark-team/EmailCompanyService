@@ -16,6 +16,8 @@ public class ServicesManager
         _methods[1] = usersService.processRegisterNewUserCommand;
         _methods[2] = usersService.processAuthExistUserCommand;
         _methods[3] = mailsService.processSendMailCommand;
+        _methods[4] = mailsService.processGetIsNotOpennedMailsCommand;
+        _methods[5] = mailsService.processGetAllMailsCommand;
     }
 
     public ClientRequest ProcessAction(int action)

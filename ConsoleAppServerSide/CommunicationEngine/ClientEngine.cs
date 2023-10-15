@@ -31,7 +31,7 @@ public class ClientEngine
         {
             string messageFromClient = ReceiveMessage();
 
-            ClientRequest clientRequest = JsonSerializer.Deserialize<ClientRequest>(messageFromClient);
+            ClientRequest clientRequest = JsonSerializer.Deserialize<ClientRequest>(messageFromClient)!;
 
             ServerResponse serverResponse = null;
 
@@ -55,7 +55,7 @@ public class ClientEngine
         byte[] outputBytes = Encoding.Unicode.GetBytes(messageToClient);
         _clientSocket.Send(outputBytes);
 
-        Logger.Debug($"MESSAGE TO CLIENT SENT: {messageToClient}");
+        Logger.Info($"MESSAGE TO CLIENT SENT: {messageToClient}");
     }
 
     private string ReceiveMessage()

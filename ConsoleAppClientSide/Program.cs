@@ -20,7 +20,7 @@ while (true)
     if (DataStorage.ContainsKey("user"))
     {
         ResponseAuthUserDto user = DataStorage.GetWithType<ResponseAuthUserDto>("user");
-        
+
         UiUtil.PrintlnString($"{user.Name}, добро пожаловать. Ваш email: {user.Email}");
     }
 
@@ -28,9 +28,11 @@ while (true)
     UiUtil.PrintlnString("1.Регистрация");
     UiUtil.PrintlnString("2.Авторизация");
     UiUtil.PrintlnString("3.Отправить письмо");
+    UiUtil.PrintlnString("4.Получить не прочитанные письмя");
+    UiUtil.PrintlnString("5.Получить все письма");
     UiUtil.PrintlnString("0.Выход");
 
-    int action = UiUtil.InputIntWithBounds("Введите действие: ", 0, 3);
+    int action = UiUtil.InputIntWithBounds("Введите действие: ", 0, 5);
 
     if (action == 0)
     {
@@ -57,6 +59,24 @@ while (true)
 
             DataStorage.AddOrUpdate("user", user);
         }
+
+        if (action == 4 || action == 5)
+        {
+            List<ResponseViewEmailDto> responseViewEmails =
+                JsonSerializer.Deserialize<List<ResponseViewEmailDto>>(serverResponse.JsonData);
+
+            if (responseViewEmails.Count == 0)
+            {
+                Console.WriteLine("У вас нету не прочитанных сообщений");
+            }
+            else
+            {
+                for (int i = 0; i < responseViewEmails.Count; i++)
+                {
+                    Console.WriteLine(responseViewEmails[i].ToString());
+                }
+            }
+        }
     }
     else if (serverResponse.Status == Statuses.ServerError)
     {
@@ -65,6 +85,7 @@ while (true)
 
     UiUtil.PrintlnString("Нажмите <Enter> для продолжения");
     UiUtil.WaitPressAnyKey();
+    Console.Clear();
 }
 
 clientEngine.CloseClientSocket();

@@ -23,4 +23,20 @@ public class MailsService
         return new ClientRequest(Commands.SendMail,
             JsonSerializer.Serialize(requestSendMailDto));
     }
+    
+    public ClientRequest processGetIsNotOpennedMailsCommand()
+    {
+        int idUser = DataStorage.GetWithType<ResponseAuthUserDto>("user").Id;
+
+        return new ClientRequest(Commands.GetIsNotOpenedEmails,
+            JsonSerializer.Serialize(idUser));
+    }
+    
+    public ClientRequest processGetAllMailsCommand()
+    {
+        int idUser = DataStorage.GetWithType<ResponseAuthUserDto>("user").Id;
+
+        return new ClientRequest(Commands.GetAllEmails,
+            JsonSerializer.Serialize(idUser));
+    }
 }
